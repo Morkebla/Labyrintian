@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labyrintian", "Labyrintian.csproj", "{B182E29F-9DD7-47CA-9081-FE84F7D4EF34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B182E29F-9DD7-47CA-9081-FE84F7D4EF34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B182E29F-9DD7-47CA-9081-FE84F7D4EF34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B182E29F-9DD7-47CA-9081-FE84F7D4EF34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B182E29F-9DD7-47CA-9081-FE84F7D4EF34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86517D59-995E-4769-8DDC-246F8FF1879B}
+	EndGlobalSection
+EndGlobal
