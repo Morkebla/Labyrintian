@@ -20,18 +20,37 @@
             Location farmland = new Location("Farmland");
             Location ravine = new Location("Ravine");
             Location castle = new Location("Castle");
-            forest.ConnectBi(hills,town,plain);
+            Location frozenlake = new Location("Frozen Lake");
+            forest.ConnectBi(hills,town,plain,castle);
             forest.ConnectSingle(river,desert);
             river.ConnectSingle(waterfall, lake);
-            river.ConnectBi(town, farmland, plain);
+            river.ConnectBi(town, farmland, plain,frozenlake,castle);
             hills.ConnectSingle(cave, ravine);
             hills.ConnectBi(mountains, swamp);
             mountains.ConnectSingle(cave,snowfield,waterfall,ravine);
+            mountains.ConnectBi(frozenlake);
             swamp.ConnectSingle(cave, ravine);
             swamp.ConnectBi(field);
             town.ConnectSingle(mountains,town);
             town.ConnectBi(farmland,castle);
             desert.ConnectSingle(desert, desert, desert);
+            cave.ConnectSingle(waterfall,lake,river);
+            cave.ConnectBi(snowfield, field, plain);
+            lake.ConnectSingle(mountains);
+            lake.ConnectBi(swamp,cave);
+            waterfall.ConnectSingle(mountains, town);
+            plain.ConnectSingle(desert);
+            plain.ConnectBi(ravine);
+            snowfield.ConnectSingle(frozenlake);
+            snowfield.ConnectBi(lake, frozenlake);
+            field.ConnectSingle(desert,ravine,lake);
+            field.ConnectBi(farmland, castle, town);
+            farmland.ConnectSingle(waterfall, hills);
+            farmland.ConnectBi(castle);
+            ravine.ConnectSingle(river);
+            ravine.ConnectBi(desert, forest,lake);
+            castle.ConnectSingle(swamp,frozenlake);
+            frozenlake.ConnectSingle(lake);
         }
         static void PrintLocation(Location location)
         {
