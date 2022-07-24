@@ -8,15 +8,13 @@ namespace Labyrintian
 {
     public class Character
     {
-        private int health { get; set; }
-        private string position { get; set; }
+        Location currentlocation;
+        private int _health;
 
-        class Player 
-        {
-            public int health = 100;
-            public string position = params[];
-              
-        }
+    }
+    public class Player: Character
+    {
+
     }
 }
 
