@@ -8,7 +8,7 @@ namespace Labyrintian
 {
     public class Character
     {
-        Location currentlocation;
+      public Location CurrentLocation { get; set; }
         private int _health;
 
     }

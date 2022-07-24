@@ -22,15 +22,39 @@
         static void Main(string[] args)
         { 
            var program = new Program();
-            program.createlocations();
+            program.Run(args);
         }
+
+        void Run(string[] args) 
+        {
+            ConnectLocations();
+            Player player = new Player(); // object of type Player.
+            player.CurrentLocation = ravine;
+            Console.WriteLine("Your Location is");
+            PrintLocation(player.CurrentLocation);
+            while (true)
+            {
+                int ConnectedLocationIndex = 0;
+                string ConsoleLine = Console.ReadLine();
+                ConnectedLocationIndex = int.Parse(ConsoleLine);
+
+               player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+               PrintLocation(player.CurrentLocation);
+            }
+        }
+
         static void PrintLocation(Location location)
         {
             Console.WriteLine(location.Name);
-            foreach (Location connectedlocation in location.ConnectedLocations)
-                Console.WriteLine(" > " + connectedlocation.Name);
+            for (int i = 0; i < location.ConnectedLocations.Count; i++)
+            {
+                Console.WriteLine(" " + i + ". " + location.ConnectedLocations[i].Name);
+                
+            }
+
         }
-        void createlocations()
+
+        void ConnectLocations()
         {
            
             forest.ConnectBi(hills, town, plain, castle);
@@ -64,5 +88,8 @@
             castle.ConnectSingle(swamp, frozenlake);
             frozenlake.ConnectSingle(lake);
         }
+
     }
+
 }
+
