@@ -9,7 +9,7 @@ namespace Labyrintian
     public class Location
     {
         public string Name { get; set; }
-        public List<Location> ConnectedLocations => _connectedLocations;
+        public List<Location> ConnectedLocations => _connectedLocations; // => is the same as { get { return _connectedLocations; } }
         private List<Location> _connectedLocations = new List<Location>();
 
        public Location()
@@ -32,7 +32,7 @@ namespace Labyrintian
         {
             foreach (Location otherLocation in otherLocations)
             {
-                this.ConnectedLocations.Add(otherLocation);
+                this.ConnectedLocations.Add(otherLocation); // "this" represents the current Location object
                 otherLocation.ConnectedLocations.Add(this);
             }
         }          
