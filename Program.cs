@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        Location forest = new Location("Forest");
+        Location forest = new Location("Forest"); // here we create new locations for the list  _ConnectedLocations to be used.
         Location desert = new Location("Desert"); // to do random location transport
         Location hills = new Location("Hills");
         Location mountains = new Location("Mountains");
@@ -20,12 +20,12 @@
         Location castle = new Location("Castle");
         Location frozenlake = new Location("Frozen Lake");
         static void Main(string[] args)
-        { 
-           var program = new Program();
+        {
+            var program = new Program();
             program.Run(args);
         }
 
-        void Run(string[] args) 
+        void Run(string[] args)
         {
             ConnectLocations();
             Player player = new Player(); // object of type Player.
@@ -34,12 +34,26 @@
             PrintLocation(player.CurrentLocation);
             while (true)
             {
+
                 int ConnectedLocationIndex = 0;
                 string ConsoleLine = Console.ReadLine();
-                ConnectedLocationIndex = int.Parse(ConsoleLine);
 
-               player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-               PrintLocation(player.CurrentLocation);
+                if (int.TryParse(ConsoleLine, out ConnectedLocationIndex))
+                {
+                    if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < player.CurrentLocation.ConnectedLocations.Count)
+                    {
+                        player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+                        PrintLocation(player.CurrentLocation);
+                    } else
+                    {
+                        Console.WriteLine("Please pick a correct Location");
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("I hate you :(");
+                }
             }
         }
 
@@ -49,14 +63,15 @@
             for (int i = 0; i < location.ConnectedLocations.Count; i++)
             {
                 Console.WriteLine(" " + i + ". " + location.ConnectedLocations[i].Name);
-                
+
+
             }
 
         }
 
         void ConnectLocations()
         {
-           
+
             forest.ConnectBi(hills, town, plain, castle);
             forest.ConnectSingle(river, desert);
             river.ConnectSingle(waterfall, lake);
