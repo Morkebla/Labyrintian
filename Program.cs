@@ -30,8 +30,10 @@
             ConnectLocations();
             Player player = new Player(); // object of type Player.
             player.CurrentLocation = ravine;
-            Console.WriteLine("Your Location is");
+
+            Console.Write("Your Location is ");
             PrintLocation(player.CurrentLocation);
+
             while (true)
             {
 
@@ -43,6 +45,8 @@
                     if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < player.CurrentLocation.ConnectedLocations.Count)
                     {
                         player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+
+                        Console.Write("Your Location is ");
                         PrintLocation(player.CurrentLocation);
                     } else
                     {
