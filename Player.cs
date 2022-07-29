@@ -16,5 +16,9 @@ namespace Labyrintian
     {
 
     }
+    public class Enemy: Character
+    {
+
+    }
 }
 

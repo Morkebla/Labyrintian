@@ -29,9 +29,16 @@
         {
             ConnectLocations();
             Player player = new Player(); // object of type Player.
+            Enemy enemy = new Enemy();
+            enemy.CurrentLocation = forest;
             player.CurrentLocation = ravine;
-            Console.WriteLine("Your Location is");
+            Console.Write("Your Location is ");
             PrintLocation(player.CurrentLocation);
+            Console.Write("You're being Chased. The killer's current location is ");
+            PrintLocation(enemy.CurrentLocation);
+
+
+
             while (true)
             {
 
@@ -42,17 +49,25 @@
                 {
                     if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < player.CurrentLocation.ConnectedLocations.Count)
                     {
+                        Console.Write("Your Location is");
                         player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
                         PrintLocation(player.CurrentLocation);
                     } else
                     {
-                        Console.WriteLine("Please pick a correct Location");
+                        Console.WriteLine("Please pick a correct destination");
                     }
 
-                }
-                else
+                } else
                 {
-                    Console.WriteLine("I hate you :(");
+                    Console.WriteLine("Please pick a correct destination");
+                }
+                Random rndLocation = new Random(ConnectedLocationIndex);
+                ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
+                if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < enemy.CurrentLocation.ConnectedLocations.Count); // Enemy moves even if i give a wrong index need to figure out a check.
+                {
+                  Console.Write("You're being Chased. The killer's current location is ");
+                    enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+                    PrintLocation(enemy.CurrentLocation);
                 }
             }
         }
