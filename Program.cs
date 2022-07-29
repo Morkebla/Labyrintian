@@ -32,12 +32,18 @@
             Enemy enemy = new Enemy();
             enemy.CurrentLocation = forest;
             player.CurrentLocation = ravine;
+<<<<<<< HEAD
             Console.Write("Your Location is ");
             PrintLocation(player.CurrentLocation);
             Console.Write("You're being Chased. The killer's current location is ");
             PrintLocation(enemy.CurrentLocation);
 
 
+=======
+
+            Console.Write("Your Location is ");
+            PrintLocation(player.CurrentLocation);
+>>>>>>> c3c1eed1e6fbd0785a0e986cfd6e11af56337186
 
             while (true)
             {
@@ -51,6 +57,8 @@
                     {
                         Console.Write("Your Location is");
                         player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+
+                        Console.Write("Your Location is ");
                         PrintLocation(player.CurrentLocation);
                     } else
                     {
