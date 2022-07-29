@@ -32,50 +32,51 @@
             Enemy enemy = new Enemy();
             enemy.CurrentLocation = forest;
             player.CurrentLocation = ravine;
-<<<<<<< HEAD
             Console.Write("Your Location is ");
             PrintLocation(player.CurrentLocation);
-            Console.Write("You're being Chased. The killer's current location is ");
-            PrintLocation(enemy.CurrentLocation);
-
-
-=======
-
-            Console.Write("Your Location is ");
-            PrintLocation(player.CurrentLocation);
->>>>>>> c3c1eed1e6fbd0785a0e986cfd6e11af56337186
+            Console.Write("There is a killer looking for you, The killer's current location is ");
+            Console.WriteLine(enemy.CurrentLocation.Name);
 
             while (true)
             {
 
                 int ConnectedLocationIndex = 0;
+                bool playerMoved = false;
                 string ConsoleLine = Console.ReadLine();
 
                 if (int.TryParse(ConsoleLine, out ConnectedLocationIndex))
                 {
                     if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < player.CurrentLocation.ConnectedLocations.Count)
                     {
-                        Console.Write("Your Location is");
                         player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-
+                        playerMoved = true;
                         Console.Write("Your Location is ");
                         PrintLocation(player.CurrentLocation);
+
                     } else
                     {
                         Console.WriteLine("Please pick a correct destination");
                     }
-
                 } else
                 {
                     Console.WriteLine("Please pick a correct destination");
                 }
-                Random rndLocation = new Random(ConnectedLocationIndex);
-                ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
-                if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < enemy.CurrentLocation.ConnectedLocations.Count); // Enemy moves even if i give a wrong index need to figure out a check.
+                
+                if (playerMoved)
                 {
-                  Console.Write("You're being Chased. The killer's current location is ");
+                    Random rndLocation = new Random();
+                    ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
                     enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-                    PrintLocation(enemy.CurrentLocation);
+                    Console.Write("There is a killer looking for you, The killer's current location is ");
+                    Console.WriteLine(enemy.CurrentLocation.Name);
+                }
+                if (player.CurrentLocation.Name == enemy.CurrentLocation.Name)
+                {
+                    Console.WriteLine("You Have been murdered.");
+                    Console.WriteLine("Game Over.");
+                    Console.Beep();
+                    break;
+
                 }
             }
         }
