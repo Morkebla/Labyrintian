@@ -2,6 +2,7 @@
 {
     internal class Program
     {
+        #region locations
         Location forest = new Location("Forest"); // here we create new locations for the list  _ConnectedLocations to be used.
         Location desert = new Location("Desert"); // to do random location transport
         Location hills = new Location("Hills");
@@ -19,6 +20,7 @@
         Location ravine = new Location("Ravine");
         Location castle = new Location("Castle");
         Location frozenlake = new Location("Frozen Lake");
+        #endregion locations
         static void Main(string[] args)
         {
             var program = new Program();
@@ -32,52 +34,118 @@
             Enemy enemy = new Enemy();
             enemy.CurrentLocation = forest;
             player.CurrentLocation = ravine;
-            Console.Write("Your Location is ");
-            PrintLocation(player.CurrentLocation);
-            Console.Write("There is a killer looking for you, The killer's current location is ");
-            Console.WriteLine(enemy.CurrentLocation.Name);
+            // Console.Write("Your Location is ");
+            // PrintLocation(player.CurrentLocation);
+            // Console.Write("There is a killer looking for you, The killer's current location is ");
+            // Console.WriteLine(enemy.CurrentLocation.Name);
+
 
             while (true)
             {
+                handlePlayerTurn(player);
+                handleEnemyMovement(enemy);
 
+                if (player.CurrentLocation.Name == enemy.CurrentLocation.Name && player.IsHiding == false)
+                {
+                    Console.WriteLine("You Have been murdered.");
+                    Console.WriteLine("Game Over.");
+                    Console.Beep();
+                    Console.ReadLine();
+                    break;
+                }
+                if (player.CurrentLocation.Name == enemy.CurrentLocation.Name && player.IsHiding == true)
+                    Console.WriteLine("You notice a shady looking figure with a knife on his belt pass you by. ");
+            }
+        }
+        bool handlePlayerMovement(Player player)
+        {
+            while (true)
+            {
                 int ConnectedLocationIndex = 0;
-                bool playerMoved = false;
+                Console.Write("Your Location is ");
+                PrintLocation(player.CurrentLocation);
+                Console.WriteLine(" " + player.CurrentLocation.ConnectedLocations.Count + ". Cancel"); // add cancel option after all the locations
                 string ConsoleLine = Console.ReadLine();
 
                 if (int.TryParse(ConsoleLine, out ConnectedLocationIndex))
                 {
                     if (ConnectedLocationIndex >= 0 && ConnectedLocationIndex < player.CurrentLocation.ConnectedLocations.Count)
                     {
-                        player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-                        playerMoved = true;
-                        Console.Write("Your Location is ");
-                        PrintLocation(player.CurrentLocation);
-
-                    } else
+                        player.CurrentLocation = player.CurrentLocation.ConnectedLocations[ConnectedLocationIndex]; break; // player cant go out of the while loop until a correct location is picked.
+                    } else if(player.CurrentLocation.ConnectedLocations.Count == ConnectedLocationIndex) // if player choses cancel option.
+                        {
+                        return true;
+                    }
+                    else
                     {
-                        Console.WriteLine("Please pick a correct destination");
+                        Console.WriteLine("Please pick a correct option");
+
                     }
                 } else
                 {
-                    Console.WriteLine("Please pick a correct destination");
+                    Console.WriteLine("Please pick a correct option");
                 }
-                
-                if (playerMoved)
+            }
+            return false;
+        }
+        void hidePlayer(Player player)
+        {
+            player.IsHiding = true;
+        }
+        void handlePlayerTurn(Player player)
+        {
+            if (player.IsHiding)
+                while (true)
                 {
-                    Random rndLocation = new Random();
-                    ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
-                    enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-                    Console.Write("There is a killer looking for you, The killer's current location is ");
-                    Console.WriteLine(enemy.CurrentLocation.Name);
+                    Console.WriteLine("You're Currently Hiding In " + player.CurrentLocation.Name);
+                    Console.WriteLine(" 0. Keep hiding");
+                    Console.WriteLine(" 1. Quit hiding");
+                    string playerChoice = Console.ReadLine();
+                    if (playerChoice == "0")// keep hiding
+                    {
+                        return; // Return exits the function while break exits the while loop
+                    }
+                    if (playerChoice == "1") // quit hiding
+                    {
+                        player.IsHiding = false; break;
+                    }
                 }
-                if (player.CurrentLocation.Name == enemy.CurrentLocation.Name)
-                {
-                    Console.WriteLine("You Have been murdered.");
-                    Console.WriteLine("Game Over.");
-                    Console.Beep();
-                    break;
 
+
+            while (true)
+            {
+
+                Console.WriteLine(" You find yourself in a " + player.CurrentLocation.Name + ". Enjoy!");
+                Console.WriteLine(" 0. Move");
+                Console.WriteLine(" 1. Scout");
+                Console.WriteLine(" 2. Pick object");
+                Console.WriteLine(" 3. Place object");
+                Console.WriteLine(" 4. Hide");
+                string playerChoice = Console.ReadLine();
+                if (playerChoice == "0") // Move
+                {
+                    bool playerGoBack;
+                    playerGoBack = handlePlayerMovement(player);
+                    if (!playerGoBack) // if playerGoBack choice is true Don't break out of the while loop yet. (continue turn)
+                    {
+                        break;
+                    }
                 }
+                if (playerChoice == "4") // Hide
+                {
+                    hidePlayer(player); break;
+                }
+            }
+        }
+        void handleEnemyMovement(Enemy enemy)
+        {
+            {
+                int ConnectedLocationIndex = 0;
+                Random rndLocation = new Random();
+                ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
+                enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+                Console.Write("There is a killer looking for you, The killer's current location is. ");
+                Console.WriteLine(enemy.CurrentLocation.Name);
             }
         }
 
