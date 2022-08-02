@@ -14,6 +14,7 @@ namespace Labyrintian
     }
     public class Player: Character
     {
+        public bool isScouting { get; set; }
         public bool IsHiding { get; set; }
     }
     public class Enemy: Character

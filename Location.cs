@@ -8,17 +8,23 @@ namespace Labyrintian
 {
     public class Location
     {
-        public string Name { get; set; }
+        public string Name { get; set; } 
+        public string Description { get; set; } 
         public List<Location> ConnectedLocations => _connectedLocations; // => is the same as { get { return _connectedLocations; } }
         private List<Location> _connectedLocations = new List<Location>(); // creates a new list  object of location class to be used in the main program.
 
-       public Location()
+        public Location ()
         {
             Name = String.Empty;
         }
-       public Location(string name)
+        public Location (string name)
         {
-            Name=name;
+            Name = name;
+        }
+        public Location(string name, string description)
+        {
+            Name = name;
+            Description = description;         
         }
         public void ConnectSingle(params Location[] otherLocations)
         {
