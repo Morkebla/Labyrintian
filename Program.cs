@@ -2,9 +2,31 @@
 {
     internal class Program
     {
+        #region Items
+        Item mushrooms = new Item();
+        Item berries = new Item();
+        Item pinecone = new Item();
+        Item cactus = new Item();
+        Item deadDnd = new Item();
+        Item glowingStone = new Item();
+        Item deadRock = new Item();
+        Item deadBird = new Item();
+        Item reeds = new Item();
+        Item deadFish = new Item();
+        Item shinyPearl = new Item();
+        Item shovel = new Item();
+        Item hammer = new Item();
+        Item miningPick = new Item();
+        Item Insect = new Item();
+        Item waterLilly = new Item();
+        Item whiteWolfPup = new Item();
+        Item charredBones = new Item();
+        Item diamond = new Item();
+        Item ice = new Item();
+        #endregion Items
         #region locations
         Location forest = new Location("Forest", " You find yourself in a beautiful place deep in the forest, there are a lot of pine trees all around you.\n" +
-            " you can hear the flow of the river nearby and deer heading in that direction.\nas you look around you also see mushrooms, berries.\n You wonder if there is something you might need. ");  // here we create new locations for the list  _ConnectedLocations to be used.
+            " you can hear the flow of the river nearby and deer heading in that direction.\n as you look around you also see mushrooms, berries.\n You wonder if there is something you might need. ");  // here we create new locations for the list  _ConnectedLocations to be used.
         Location desert = new Location("Desert", " It is sunny and hot, as you walk further into the desert you start to wonder why are you even there in a first place.\n" +
             " you see cactuses on the way, aswell as the scorpions you have carefully been trying to watchout for.\n the sand is so warm you carry your shoes in hand."); // to do random location transport
         Location hills = new Location("Hills", " It seems like a typical grassy hill, with loads of sheep and their shepherd.\n for a moment you forget you're being chased it is very relaxing" +
@@ -110,26 +132,27 @@
         }
         void playerScout(Player player)
         {
-            player.isScouting = true;
+            player.IsScouting = true;
         }
 
         void handlePlayerTurn(Player player)
         {
-            if (player.isScouting)
+            if (player.IsScouting)
                 while (true)
                 {
                     Console.WriteLine(player.CurrentLocation.Description);
                     Console.WriteLine(" 0. Pick Object");
                     Console.WriteLine(" 1. Place Object");
                     string objectdecision = Console.ReadLine();
-                    if (objectdecision == " 0")
+                    if (objectdecision == "0")
                     {
-                        //tbd
+                        //ToDo
                     }
-                    if (objectdecision == " 1")
+                    if (objectdecision == "1")
                     {
-                        // tbd
-                    }                   
+                        // ToDo
+                    }
+                    return;
                 }
             if (player.IsHiding)
                 while (true)
@@ -142,9 +165,10 @@
                     {
                         return; // Return exits the function,  while break exits the while loop.
                     }
-                    if (playerChoice == " 1") // quit hiding
+                    if (playerChoice == "1") // quit hiding
                     {
-                        player.IsHiding = false; break;
+                        player.IsHiding = false;
+                        return;
                     }
                 }
 
@@ -155,9 +179,7 @@
                 Console.WriteLine(" You find yourself in a " + player.CurrentLocation.Name + ". Enjoy!");
                 Console.WriteLine(" 0. Move");
                 Console.WriteLine(" 1. Scout");
-                Console.WriteLine(" 2. Pick object");
-                Console.WriteLine(" 3. Place object");
-                Console.WriteLine(" 4. Hide");
+                Console.WriteLine(" 2. Hide");
                 string playerChoice = Console.ReadLine();
                 if (playerChoice == "0") // Move
                 {
@@ -168,14 +190,13 @@
                         break;
                     }
                 }
-                if (playerChoice == "4") // Hide
+                if (playerChoice == "2") // Hide
                 {
                     hidePlayer(player); break;
                 }
                 if (playerChoice == "1")
                 {
-                    playerScout(player); break;
-                    Console.WriteLine(player.CurrentLocation.Description); break;
+                    playerScout(player);  break;
                 }
             }
         }

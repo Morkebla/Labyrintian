@@ -14,8 +14,9 @@ namespace Labyrintian
     }
     public class Player: Character
     {
-        public bool isScouting { get; set; }
+        public bool IsScouting { get; set; }
         public bool IsHiding { get; set; }
+        public string Inventory = string.Empty;
     }
     public class Enemy: Character
     {
