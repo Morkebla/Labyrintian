@@ -8,11 +8,13 @@ namespace Labyrintian
 {
     public class Location
     {
-        public string Name { get; set; } 
+         public string Name { get; set; } 
         public string Description { get; set; } 
         public List<Location> ConnectedLocations => _connectedLocations; // => is the same as { get { return _connectedLocations; } }
         private List<Location> _connectedLocations = new List<Location>(); // creates a new list  object of location class to be used in the main program.
-        // ToDo list of items connected to the locations.
+        public List<Item> Items => _Items;
+        private List<Item> _Items = new List<Item>();
+
         public Location ()
         {
             Name = String.Empty;

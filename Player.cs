@@ -16,7 +16,8 @@ namespace Labyrintian
     {
         public bool IsScouting { get; set; }
         public bool IsHiding { get; set; }
-        public string Inventory = string.Empty;
+        public List<Item> Inventory => _inventory;
+        private List<Item> _inventory = new List<Item>();
     }
     public class Enemy: Character
     {

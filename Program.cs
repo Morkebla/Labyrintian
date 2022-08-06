@@ -3,26 +3,31 @@
     internal class Program
     {
         #region Items
-        Item mushrooms = new Item();
-        Item berries = new Item();
-        Item pinecone = new Item();
-        Item cactus = new Item();
-        Item deadDnd = new Item();
-        Item glowingStone = new Item();
-        Item deadRock = new Item();
-        Item deadBird = new Item();
-        Item reeds = new Item();
-        Item deadFish = new Item();
-        Item shinyPearl = new Item();
-        Item shovel = new Item();
-        Item hammer = new Item();
-        Item miningPick = new Item();
-        Item Insect = new Item();
-        Item waterLilly = new Item();
-        Item whiteWolfPup = new Item();
-        Item charredBones = new Item();
-        Item diamond = new Item();
-        Item ice = new Item();
+        Item mushroom = new Item("Mushroom");
+        Item berry = new Item("Berry");
+        Item pineCone = new Item("Pine Cone");
+        Item cactus = new Item("Cactus");
+        Item glowingStone = new Item("Glowing Stone");
+        Item deadRock = new Item("Dead Rock");
+        Item deadBird = new Item("Dead Bird");
+        Item vulture = new Item("Vulture");
+        Item reeds = new Item("Reeds");
+        Item deadFish = new Item("Dead Fish");
+        Item shinyPearl = new Item("Shiny Pearl");
+        Item waterSnake = new Item("Eel");
+        Item shovel = new Item("Shovel");
+        Item hammer = new Item("Hammer");
+        Item miningPick = new Item("Mining Pick");
+        Item Insect = new Item("Insect");
+        Item waterLilly = new Item("Water Lilly");
+        Item whiteWolfPup = new Item("White Wolf Pup");
+        Item charredBones = new Item("Charred Bones");
+        Item diamond = new Item("Diamond");
+        Item ice = new Item("Ice");
+        Item sharpRock = new Item("Flint");
+        Item bearTrap = new Item("Bear Trap");
+        Item stick = new Item("Stick");
+        Item spear = new Item("Spear");
         #endregion Items
         #region locations
         Location forest = new Location("Forest", " You find yourself in a beautiful place deep in the forest, there are a lot of pine trees all around you.\n" +
@@ -36,7 +41,7 @@
         Location swamp = new Location("Swamp", " Your shoes heavier than usual with mud all over them, and surrounded by reeds.\n you start to think about settling the swamp " +
             " doubting whoever is looking for you can even find you there.");
         Location river = new Location("River", " You go down the river stream, in order not to leave footprints.\n You see fish and a whole load of them, only if you had your fishing rod with you.\n" +
-            " in an attempt to catch one by hands, you grab a water snake and drop it after you have realised what you have actually caught.\n as you look down you see a pearl maybe you should pick it up.");
+            " in an attempt to catch one by hands, you grab a water snake and drop it after you have realised what you have actually caught.");
         Location town = new Location("Town", " You walk through town as you notice a mining shop, you go in and see theres a couple of things you may find extremely usefull.\n there is a mining pick a hammer and a shovel.\n" +
             " too bad you have no money.\n As you speak to the miner he mentions a little gem he lost as he was going back home that is worth a lot to him perhaps you can find it.");
         Location cave = new Location("Cave", " Once deep into the cave your eyes end up in a place in the cave where the cave has no ceiling and the sun rays hit the floor.\n" +
@@ -68,11 +73,12 @@
 
         void Run(string[] args)
         {
+            PlaceItems();
             ConnectLocations();
             Player player = new Player(); // object of type Player.
             Enemy enemy = new Enemy();
-            enemy.CurrentLocation = forest;
-            player.CurrentLocation = ravine;
+            enemy.CurrentLocation = desert;
+            player.CurrentLocation = forest;
             // Console.Write("Your Location is ");
             // PrintLocation(player.CurrentLocation);
             // Console.Write("There is a killer looking for you, The killer's current location is ");
@@ -86,14 +92,14 @@
 
                 if (player.CurrentLocation.Name == enemy.CurrentLocation.Name && player.IsHiding == false)
                 {
-                    Console.WriteLine(" You Have been murdered.");
+                    Console.WriteLine(" You Have been murdered.\n");
                     Console.WriteLine(" Game Over.");
                     Console.Beep();
                     Console.ReadLine();
                     break;
                 }
                 if (player.CurrentLocation.Name == enemy.CurrentLocation.Name && player.IsHiding == true)
-                    Console.WriteLine(" You notice a shady looking figure with a knife on his belt pass you by. ");
+                    Console.WriteLine(" You notice a shady looking figure with a knife on his belt pass you by.\n ");
             }
         }
         bool handlePlayerMovement(Player player)
@@ -116,12 +122,12 @@
                         return true;
                     } else
                     {
-                        Console.WriteLine(" Please pick a correct option");
+                        Console.WriteLine(" Please pick a correct option\n");
 
                     }
                 } else
                 {
-                    Console.WriteLine(" Please pick a correct option");
+                    Console.WriteLine(" Please pick a correct option\n");
                 }
             }
             return false;
@@ -135,6 +141,65 @@
             player.IsScouting = true;
         }
 
+        void pickUpHandling(Player player)
+        {
+            if (player.CurrentLocation.Items.Count == 0)
+            {
+                Console.WriteLine("There are no items to be picked up here.\n");
+                return;
+            }
+            while (true)
+            {
+                for (int i = 0; player.CurrentLocation.Items.Count > i; i++)
+                {
+                    Console.WriteLine($" {i}. {player.CurrentLocation.Items[i].ItemName}");
+                }
+                int itemindex = 0;
+                string pickup = Console.ReadLine();
+                if (int.TryParse(pickup, out itemindex))
+                {
+                    if (itemindex < player.CurrentLocation.Items.Count && itemindex >= 0)
+                    {
+                        Item pickedUpItem = player.CurrentLocation.Items[itemindex];// saves the removed item of the current location into a variable
+                        player.CurrentLocation.Items.Remove(pickedUpItem); // removes pickedupitem from currentlocation
+                        player.Inventory.Add(pickedUpItem); // puts pickedupitem to inventory
+                        Console.WriteLine($"You picked up a {pickedUpItem.ItemName}\n");
+                        break;
+                    }
+
+                }
+            }
+        }
+        void placeItemHandling(Player player)
+        {
+            if (player.Inventory.Count == 0)
+            {
+                Console.WriteLine("There are no items in your inventory\n");
+                return;
+            }
+            while (true)
+            {
+                for (int i = 0; player.Inventory.Count > i; i++)
+                {
+                    Console.WriteLine($" {i}. {player.Inventory[i].ItemName} ");
+                }
+
+                int itemindex = 0;
+                string pickup = Console.ReadLine();
+                if (int.TryParse(pickup, out itemindex))
+                {
+                    if (itemindex < player.Inventory.Count && itemindex >= 0)
+                    {
+                        Item placedItems = player.Inventory[itemindex];
+                        player.Inventory.Remove(placedItems);
+                        player.CurrentLocation.Items.Add(placedItems);
+                        Console.WriteLine($"You Placed a {placedItems.ItemName}\n");
+                        break;
+                    }
+
+                }
+            }
+        }
         void handlePlayerTurn(Player player)
         {
             if (player.IsScouting)
@@ -143,14 +208,20 @@
                     Console.WriteLine(player.CurrentLocation.Description);
                     Console.WriteLine(" 0. Pick Object");
                     Console.WriteLine(" 1. Place Object");
+                    Console.WriteLine(" 2. Cancel");
                     string objectdecision = Console.ReadLine();
                     if (objectdecision == "0")
                     {
-                        //ToDo
+                        pickUpHandling(player);
                     }
                     if (objectdecision == "1")
                     {
-                        // ToDo
+                        placeItemHandling(player);
+                    }
+                    if (objectdecision == "2")
+                    {
+                        player.IsScouting = false;
+                        break;
                     }
                     return;
                 }
@@ -176,7 +247,7 @@
             while (true)
             {
 
-                Console.WriteLine(" You find yourself in a " + player.CurrentLocation.Name + ". Enjoy!");
+                Console.WriteLine(" You find yourself in a " + player.CurrentLocation.Name + ". Enjoy!\n");
                 Console.WriteLine(" 0. Move");
                 Console.WriteLine(" 1. Scout");
                 Console.WriteLine(" 2. Hide");
@@ -196,7 +267,7 @@
                 }
                 if (playerChoice == "1")
                 {
-                    playerScout(player);  break;
+                    playerScout(player); break;
                 }
             }
         }
@@ -207,7 +278,7 @@
                 Random rndLocation = new Random();
                 ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
                 enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-                Console.Write(" There is a killer looking for you, The killer's current location is. ");
+                Console.Write(" There is a killer looking for you, The killer's current location is.\n ");
                 Console.WriteLine(enemy.CurrentLocation.Name);
             }
         }
@@ -223,9 +294,30 @@
             }
 
         }
+        void PlaceItems()
+        {
+            forest.Items.Add(mushroom);
+            forest.Items.Add(berry);
+            forest.Items.Add(pineCone);
+            desert.Items.Add(cactus);
+            mountains.Items.Add(deadRock);
+            desert.Items.Add(deadBird);
+            desert.Items.Add(vulture);
+            swamp.Items.Add(reeds);
+            swamp.Items.Add(waterLilly);
+            river.Items.Add(deadFish);
+            river.Items.Add(shinyPearl);
+            waterfall.Items.Add(waterSnake);
+            cave.Items.Add(Insect);
+            cave.Items.Add(sharpRock);
+            frozenlake.Items.Add(ice);
+            snowfield.Items.Add(bearTrap);
+            snowfield.Items.Add(stick);
 
+        }
         void ConnectLocations()
         {
+            // forest.Items.Add(pineCone) Example of adding item to location Forest.
 
             forest.ConnectBi(hills, town, plain, castle);
             forest.ConnectSingle(river, desert);
