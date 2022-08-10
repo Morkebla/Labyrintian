@@ -15,19 +15,20 @@
         Item deadFish = new Item("Dead Fish");
         Item shinyPearl = new Item("Shiny Pearl");
         Item waterSnake = new Item("Eel");
-        Item shovel = new Item("Shovel");
-        Item hammer = new Item("Hammer");
-        Item miningPick = new Item("Mining Pick");
+        UsableItem shovel = new UsableItem("Shovel");
+        UsableItem hammer = new UsableItem("Hammer");
+        UsableItem miningPick = new UsableItem("Mining Pick");
         Item Insect = new Item("Insect");
         Item waterLilly = new Item("Water Lilly");
         Item whiteWolfPup = new Item("White Wolf Pup");
         Item charredBones = new Item("Charred Bones");
-        Item diamond = new Item("Diamond");
+        ReplacerItem diamond = new ReplacerItem("Diamond");
         Item ice = new Item("Ice");
         Item sharpRock = new Item("Flint");
-        Item bearTrap = new Item("Bear Trap");
+        TrapItem bearTrap = new TrapItem("Bear Trap");
         Item stick = new Item("Stick");
-        Item spear = new Item("Spear");
+        Item spear = new Item("Spear"); // ToDo get buffed on pickup
+        Item map = new Item("Landscape Map"); // TODO : reveals a hidden location that is the endgame.
         #endregion Items
         #region locations
         Location forest = new Location("Forest", " You find yourself in a beautiful place deep in the forest, there are a lot of pine trees all around you.\n" +
@@ -74,11 +75,13 @@
         void Run(string[] args)
         {
             PlaceItems();
+            SetupItems();
             ConnectLocations();
             Player player = new Player(); // object of type Player.
             Enemy enemy = new Enemy();
             enemy.CurrentLocation = desert;
-            player.CurrentLocation = forest;
+            player.CurrentLocation = snowfield;
+            player.Inventory.Add(diamond);
             // Console.Write("Your Location is ");
             // PrintLocation(player.CurrentLocation);
             // Console.Write("There is a killer looking for you, The killer's current location is ");
@@ -148,6 +151,11 @@
                 Console.WriteLine("There are no items to be picked up here.\n");
                 return;
             }
+            if (player.Inventory.Count > 5)
+            {
+                Console.WriteLine("You cannot carry anymore items.");
+                return;
+            }
             while (true)
             {
                 for (int i = 0; player.CurrentLocation.Items.Count > i; i++)
@@ -161,9 +169,8 @@
                     if (itemindex < player.CurrentLocation.Items.Count && itemindex >= 0)
                     {
                         Item pickedUpItem = player.CurrentLocation.Items[itemindex];// saves the removed item of the current location into a variable
-                        player.CurrentLocation.Items.Remove(pickedUpItem); // removes pickedupitem from currentlocation
-                        player.Inventory.Add(pickedUpItem); // puts pickedupitem to inventory
-                        Console.WriteLine($"You picked up a {pickedUpItem.ItemName}\n");
+
+                        pickedUpItem.OnItemPicked(player);
                         break;
                     }
 
@@ -191,9 +198,36 @@
                     if (itemindex < player.Inventory.Count && itemindex >= 0)
                     {
                         Item placedItems = player.Inventory[itemindex];
-                        player.Inventory.Remove(placedItems);
-                        player.CurrentLocation.Items.Add(placedItems);
-                        Console.WriteLine($"You Placed a {placedItems.ItemName}\n");
+
+                        placedItems.OnItemPlaced(player);
+                        break;
+                    }
+
+                }
+            }
+        }
+        void ItemUseHandling(Player player)
+        {
+            if (player.Inventory.Count == 0)
+            {
+                Console.WriteLine("You have no items in your inventory.\n");
+                return;
+            }
+            while (true)
+            {
+                for (int i = 0; player.Inventory.Count > i; i++)
+                {
+                    Console.WriteLine($" {i}. {player.Inventory[i].ItemName}");
+                }
+                int itemindex = 0;
+                string UseItem = Console.ReadLine();
+                if (int.TryParse(UseItem, out itemindex))
+                {
+                    if (itemindex < player.Inventory.Count && itemindex >= 0)
+                    {
+                        Item ItemToUse = player.Inventory[itemindex];// saves the removed item of the current location into a variable
+
+                        ItemToUse.OnItemUsed(player);
                         break;
                     }
 
@@ -208,7 +242,8 @@
                     Console.WriteLine(player.CurrentLocation.Description);
                     Console.WriteLine(" 0. Pick Object");
                     Console.WriteLine(" 1. Place Object");
-                    Console.WriteLine(" 2. Cancel");
+                    Console.WriteLine(" 2. Use Object");
+                    Console.WriteLine(" 3. Cancel");
                     string objectdecision = Console.ReadLine();
                     if (objectdecision == "0")
                     {
@@ -219,6 +254,10 @@
                         placeItemHandling(player);
                     }
                     if (objectdecision == "2")
+                    {
+                        ItemUseHandling(player);
+                    }
+                    if (objectdecision == "3")
                     {
                         player.IsScouting = false;
                         break;
@@ -274,12 +313,25 @@
         void handleEnemyMovement(Enemy enemy)
         {
             {
-                int ConnectedLocationIndex = 0;
-                Random rndLocation = new Random();
-                ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
-                enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
-                Console.Write(" There is a killer looking for you, The killer's current location is.\n ");
-                Console.WriteLine(enemy.CurrentLocation.Name);
+
+                if (enemy.CurrentLocation == bearTrap.LocationArmedAt && bearTrap.StunTrapTime > 0)
+                {
+                    Console.Write($"The killer fell into a trap and is unable to move for {bearTrap.StunTrapTime} turn");
+                    bearTrap.StunTrapTime = bearTrap.StunTrapTime - 1;
+                    if (bearTrap.StunTrapTime <= 0)
+                    {
+                        enemy.CurrentLocation.Items.Remove(bearTrap);
+                    }
+                }
+                else
+                {
+                    int ConnectedLocationIndex = 0;
+                    Random rndLocation = new Random();
+                    ConnectedLocationIndex = rndLocation.Next(enemy.CurrentLocation.ConnectedLocations.Count);
+                    enemy.CurrentLocation = enemy.CurrentLocation.ConnectedLocations[ConnectedLocationIndex];
+                    Console.Write(" There is a killer looking for you, The killer's current location is.\n ");
+                    Console.WriteLine(enemy.CurrentLocation.Name);
+                }
             }
         }
 
@@ -314,6 +366,24 @@
             snowfield.Items.Add(bearTrap);
             snowfield.Items.Add(stick);
 
+        }
+        void SetupItems()
+        {
+            bearTrap.LocationArmedAt = snowfield;
+            bearTrap.StunTrapTime = 2;
+            bearTrap.ItemSetMessage = "Bear trap set!";
+            miningPick.ItemReplaceMessage = ""; // Todo message for digging up a diamond
+            miningPick.ItemToReplaceWith = diamond;
+            miningPick.LocationToUseAt = ravine;
+            hammer.ItemReplaceMessage = ""; // Todo message for digging up a diamond
+            hammer.ItemToReplaceWith = diamond;
+            hammer.LocationToUseAt = mountains;
+            shovel.ItemReplaceMessage = ""; // Todo message for digging up a diamond
+            shovel.ItemToReplaceWith = glowingStone;
+            shovel.LocationToUseAt = field;
+            diamond.ItemToReplaceWith = map;
+            diamond.LocationToPlaceAt = castle;
+            diamond.ItemReplaceMessage = ""; // TODO message to appear after droping the diamond
         }
         void ConnectLocations()
         {
