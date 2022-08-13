@@ -95,6 +95,8 @@ namespace Labyrintian
                 player.Inventory.Remove(this);
                 player.Inventory.Add(ItemToReplaceWith);
                 Console.WriteLine(ItemReplaceMessage);
+                ItemToReplaceWith.OnItemPicked(player);
+ 
             } else
             {
                 base.OnItemPlaced(player);
@@ -102,4 +104,28 @@ namespace Labyrintian
             //when diamond is placed in castle remove diamond / place map in player inventory if theres space. if theres no spacep place on the ground.
         }
     }
+    public class MapItem : Item
+    {
+        public Location Castle { get; set;}
+        public Location LocationToConnectTo { get; set; }
+        public Location NewWorld { get; set;}
+        public MapItem() : base() { }
+        public MapItem(string itemName) : base(itemName) { }
+
+        public override void OnItemPicked(Player player)
+        {
+            //base.OnItemPicked(player);
+            LocationToConnectTo.ConnectSingle(NewWorld);
+            Console.WriteLine("The map Has revealed a new location for you Connected to the Desert.");
+            Castle.Description = "as you walk throught the castle streets you see people waiting to enter the castle gates. busy streets inn's appear to be full.";
+
+
+        }
+        public override void OnItemPlaced(Player player)
+        {
+            Console.WriteLine("You cant get to where you want without a map!");
+            //base.OnItemPlaced(player);
+        }
+    }
+
 }
